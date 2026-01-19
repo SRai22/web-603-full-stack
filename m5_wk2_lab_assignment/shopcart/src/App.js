@@ -1,22 +1,48 @@
 import './App.css';
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import productsData from './products';
+import Navbar from './navbar';
+import Home from './Home';
+import Cart from './Cart';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       cartItems: 0,
-      products: [
-        { id: 1, name: "Unisex Cologne", image: "products/cologne.jpg", quantity: 0 },
-        { id: 2, name: "Apple iWatch", image: "products/iwatch.jpg", quantity: 0 },
-        { id: 3, name: "Unique Mug", image: "products/mug.jpg", quantity: 0 },
-        { id: 4, name: "Mens Wallet", image: "products/wallet.jpg", quantity: 0 },
-      ],
+      products: productsData,
+      showModal: false,
+      activeProduct: null,
     };
   }
+
+  addQuantity = (id) => {
+    this.setState((prevState) => {
+      const products = prevState.products.map((p) => {
+        if (p.id === id) {
+          return { ...p, quantity: p.quantity + 1 };
+        }
+        return p;
+      });
+      const cartItems = products.reduce((sum, prod) => sum + prod.quantity, 0);
+      return { products, cartItems };
+    });
+  };
+
+  subtractQuantity = (id) => {
+    this.setState((prevState) => {
+      const products = prevState.products.map((p) => {
+        if (p.id === id) {
+          return { ...p, quantity: Math.max(0, p.quantity - 1) };
+        }
+        return p;
+      });
+      const cartItems = products.reduce((sum, prod) => sum + prod.quantity, 0);
+      return { products, cartItems };
+    });
+  };
 
   handleQuantityChange = (id, value) => {
     const updatedProducts = this.state.products.map((product) => {
@@ -29,82 +55,51 @@ class App extends Component {
     this.setState({ products: updatedProducts, cartItems: totalItems });
   };
 
+  openProductModal = (product) => {
+    this.setState({ showModal: true, activeProduct: product });
+  };
+
+  closeProductModal = () => {
+    this.setState({ showModal: false, activeProduct: null });
+  };
+
   render() {
-    const headerStyle = {
-      backgroundColor: '#17a2b8',
-      color: '#000',
-      padding: '1.5rem 0'
-    };
-
-    const productRowStyle = {
-      borderBottom: '1px solid #dee2e6',
-      padding: '2rem 0',
-      backgroundColor: '#fff'
-    };
-
-    const lastProductRowStyle = {
-      padding: '2rem 0',
-      backgroundColor: '#fff'
-    };
-
-    const inputStyle = {
-      width: '80px',
-      height: '45px',
-      textAlign: 'center',
-      fontSize: '1rem'
-    };
-
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
-        <header style={headerStyle}>
-          <div className="container">
-            <div className="row align-items-center">
-              <div className="col">
-                <h1 style={{ fontSize: '2.5rem', fontWeight: 'normal', margin: 0 }}>Shop to React</h1>
-              </div>
-              <div className="col-auto">
-                <span style={{ fontSize: '1.1rem' }}>
-                  <FontAwesomeIcon icon={faShoppingCart} style={{ marginRight: '0.5rem' }} />
-                  {this.state.cartItems} items
-                </span>
+        <Router>
+          <Navbar cartItems={this.state.cartItems} />
+          <Routes>
+            <Route path="/" element={<Home
+              products={this.state.products}
+              onQuantityChange={this.handleQuantityChange}
+              onShowProduct={this.openProductModal}
+              onAdd={this.addQuantity}
+              onSubtract={this.subtractQuantity}
+            />} />
+            <Route path="/cart" element={<Cart products={this.state.products} />} />
+          </Routes>
+        </Router>
+
+        {this.state.showModal && this.state.activeProduct && (
+          <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={this.closeProductModal}>
+            <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">{this.state.activeProduct.name}</h5>
+                  <button type="button" className="btn-close" aria-label="Close" onClick={this.closeProductModal}></button>
+                </div>
+                <div className="modal-body">
+                  <img src={this.state.activeProduct.image} alt={this.state.activeProduct.name} style={{ width: '100%', height: 'auto', marginBottom: '1rem' }} />
+                  <p>{this.state.activeProduct.description}</p>
+                  <p><strong>Ratings:</strong> {this.state.activeProduct.ratings}</p>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={this.closeProductModal}>Close</button>
+                </div>
               </div>
             </div>
           </div>
-        </header>
-        
-        <main className="container" style={{ maxWidth: '1200px' }}>
-          {this.state.products.map((product, index) => (
-            <div
-              key={product.id}
-              style={index < this.state.products.length - 1 ? productRowStyle : lastProductRowStyle}
-            >
-              <h5 style={{ fontSize: '1.5rem', fontWeight: 'normal', margin: '0 0 1rem 0' }}>{product.name}</h5>
-              <div className="row align-items-center">
-                <div className="col-auto">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    style={{ width: '120px', height: '120px', objectFit: 'cover' }}
-                  />
-                </div>
-                
-                <div className="col-auto d-flex align-items-center">
-                  <input
-                    type="number"
-                    className="form-control"
-                    style={inputStyle}
-                    value={product.quantity}
-                    min="0"
-                    onChange={(e) =>
-                      this.handleQuantityChange(product.id, parseInt(e.target.value) || 0)
-                    }
-                  />
-                  <span style={{ marginLeft: '1rem', fontSize: '1rem' }}>quantity</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </main>
+        )}
       </div>
     );
   }
