@@ -24,14 +24,14 @@ function DeleteList(props) {
                     <Modal.Title>Delete List</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <input 
-                        type="text" 
+                    <input
+                        type="text"
                         placeholder="Title"
                         name="title"
                         value={props.singledata.title}
                         disabled={true}
                         className="d-block my-3"
-                    > </input>
+                    />
                     <input
                         type="text"
                         placeholder="Author"
@@ -39,7 +39,7 @@ function DeleteList(props) {
                         value={props.singledata.author}
                         disabled={true}
                         className="d-block my-3"
-                    ></input>
+                    />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>

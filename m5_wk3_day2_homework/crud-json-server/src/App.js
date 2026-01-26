@@ -9,6 +9,7 @@ class App extends React.Component {
         loading: false,
         alldata: [],
         singledata: {
+          id: "",
           title: "",
           author: ""
         }
@@ -30,31 +31,45 @@ class App extends React.Component {
     };
 
     createList = () => {
+      const createData = {
+        title: this.state.singledata.title,
+        author: this.state.singledata.author
+      };
+
       fetch("http://localhost:5000/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(this.state.singledata),
-      }).then(
+        body: JSON.stringify(createData),
+      })
+      .then(res => res.json())
+      .then((result) => {
         this.setState({
           singledata: {
+            id: "",
             title: "",
             author: ""
           }
-        })
-      );
+        });
+        this.getLists();
+      })
+      .catch((error) => {
+        console.error("Error creating list:", error);
+      });
     };
 
     handleChange = (event) => {
+      let id = this.state.singledata.id;
       let title = this.state.singledata.title;
       let author = this.state.singledata.author;
 
       if (event.target.name === "title") { title = event.target.value; }
-      else {author = event.target.value; }
+      else if (event.target.name === "author") { author = event.target.value; }
 
       this.setState({
         singledata: {
+          id: id,
           title: title,
           author: author
         }
@@ -64,16 +79,18 @@ class App extends React.Component {
     getList =(event, id) => {
       this.setState({
         singledata: {
+          id: id,
           title: "Loading...",
           author: "Loading..."
         }
-      }, 
+      },
       () => {
           fetch(`http://localhost:5000/posts/${id}`)
             .then((res) => res.json())
             .then((result) => {
               this.setState({
                 singledata: {
+                  id: result.id,
                   title: result.title,
                   author: result.author ? result.author : ""
                 }
@@ -84,22 +101,31 @@ class App extends React.Component {
     }
 
     updateList = (event,id) => {
+      const updateData = {
+        title: this.state.singledata.title,
+        author: this.state.singledata.author
+      };
+
       fetch(`http://localhost:5000/posts/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(this.state.singledata),
+        body: JSON.stringify(updateData),
       })
       .then( res => res.json())
       .then( (result) => {
         this.setState({
           singledata: {
-            title: "", 
+            id: "",
+            title: "",
             author: ""
           }
         });
         this.getLists();
+      })
+      .catch((error) => {
+        console.error("Error updating list:", error);
       });
     };
 
@@ -111,11 +137,15 @@ class App extends React.Component {
       .then( (result) => {
         this.setState({
           singledata: {
-            title: "", 
+            id: "",
+            title: "",
             author: ""
           }
         });
         this.getLists();
+      })
+      .catch((error) => {
+        console.error("Error deleting list:", error);
       });
     };
 
