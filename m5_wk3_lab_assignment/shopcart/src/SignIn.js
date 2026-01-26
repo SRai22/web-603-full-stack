@@ -97,7 +97,7 @@ const SignIn = ({ onLogin }) => {
               callback={responseFacebook}
               cssClass="btn btn-primary w-100"
               icon="fa-facebook"
-              textButton="LOGIN WITH FACEBOOK"
+              textButton="  LOGIN WITH FACEBOOK"
               buttonStyle={{
                 backgroundColor: '#4267B2',
                 border: 'none',
