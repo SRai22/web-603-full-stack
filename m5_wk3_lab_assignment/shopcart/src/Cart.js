@@ -9,9 +9,9 @@ const Cart = ({ products }) => {
       <h3>Your Cart</h3>
       {items.length === 0 ? (
         <div>
-          <p>You have {items.length} items in your cart.</p>
+          <p>There are {items.length} items in your cart.</p>
           <button
-            className="btn btn-primary"
+            className="btn btn-success"
             style={{
               marginTop: '1rem',
               padding: '0.75rem 1.5rem',
@@ -44,6 +44,7 @@ const Cart = ({ products }) => {
               fontSize: '1.1rem',
               fontWeight: '500'
             }}
+            onClick={() => navigate('/signin')}
           >
             Check Out
           </button>

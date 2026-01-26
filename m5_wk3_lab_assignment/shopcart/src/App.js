@@ -5,6 +5,7 @@ import productsData from './products';
 import Navbar from './navbar';
 import Home from './Home';
 import Cart from './Cart';
+import SignIn from './SignIn';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 class App extends Component {
@@ -77,6 +78,7 @@ class App extends Component {
               onSubtract={this.subtractQuantity}
             />} />
             <Route path="/cart" element={<Cart products={this.state.products} />} />
+            <Route path="/signin" element={<SignIn />} />
           </Routes>
         </Router>
 
