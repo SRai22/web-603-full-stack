@@ -16,6 +16,8 @@ class App extends Component {
       products: productsData,
       showModal: false,
       activeProduct: null,
+      isAuthenticated: false,
+      user: null,
     };
   }
 
@@ -64,6 +66,20 @@ class App extends Component {
     this.setState({ showModal: false, activeProduct: null });
   };
 
+  handleLogin = (userData) => {
+    this.setState({
+      isAuthenticated: true,
+      user: userData
+    });
+  };
+
+  handleLogout = () => {
+    this.setState({
+      isAuthenticated: false,
+      user: null
+    });
+  };
+
   render() {
     return (
       <div style={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
@@ -78,7 +94,7 @@ class App extends Component {
               onSubtract={this.subtractQuantity}
             />} />
             <Route path="/cart" element={<Cart products={this.state.products} />} />
-            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signin" element={<SignIn onLogin={this.handleLogin} />} />
           </Routes>
         </Router>
 

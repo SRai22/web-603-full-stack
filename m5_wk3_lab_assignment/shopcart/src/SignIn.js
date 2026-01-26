@@ -1,16 +1,46 @@
 import React, { useState } from 'react';
+import FacebookLogin from 'react-facebook-login';
+import { useNavigate } from 'react-router-dom';
 
-const SignIn = () => {
+const SignIn = ({ onLogin }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
     console.log('Login with:', { name, email });
+
+    // Call the onLogin callback with user data
+    if (onLogin) {
+      onLogin({ name, email });
+    }
+
+    // Navigate to home after successful login
+    navigate('/');
   };
 
-  const handleFacebookLogin = () => {
-    console.log('Facebook login clicked');
+  const responseFacebook = (response) => {
+    console.log('Facebook login response:', response);
+    if (response.accessToken) {
+      // Successfully logged in with Facebook
+      console.log('User logged in:', response.name, response.email);
+
+      // Call the onLogin callback with Facebook user data
+      if (onLogin) {
+        onLogin({
+          name: response.name,
+          email: response.email,
+          picture: response.picture?.data?.url,
+          facebookId: response.userID
+        });
+      }
+
+      // Navigate to home after successful Facebook login
+      navigate('/');
+    } else {
+      console.log('Facebook login failed or cancelled');
+    }
   };
 
   return (
@@ -60,25 +90,25 @@ const SignIn = () => {
           </div>
 
           <div style={{ marginTop: '3rem', maxWidth: '300px' }}>
-            <button
-              className="btn btn-primary w-100"
-              style={{
+            <FacebookLogin
+              appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+              autoLoad={false}
+              fields="name,email,picture"
+              callback={responseFacebook}
+              cssClass="btn btn-primary w-100"
+              icon="fa-facebook"
+              textButton="LOGIN WITH FACEBOOK"
+              buttonStyle={{
                 backgroundColor: '#4267B2',
                 border: 'none',
                 padding: '0.75rem',
                 fontSize: '1rem',
                 fontWeight: 'bold',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                textTransform: 'uppercase'
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                borderRadius: '0.375rem'
               }}
-              onClick={handleFacebookLogin}
-            >
-              <span style={{ fontSize: '1.2rem' }}>f</span>
-              LOGIN WITH FACEBOOK
-            </button>
+            />
           </div>
         </div>
       </div>
