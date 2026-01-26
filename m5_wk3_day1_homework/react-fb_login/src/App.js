@@ -36,12 +36,12 @@ function App() {
 
   return (
     <div className="container">
-      <Card>
-        <Card.Header>
+      <Card style = {{width: '800px'}} className='mx-auto mt-5'>
+        <Card.Header className='pb-4'>
           <h1>My React App</h1>
         </Card.Header>
         <Card.Body>
-          <Card.Text>
+          <React.Fragment>
             <h3>Please login using one of the following:</h3>
 
             {/* Login Form */}
@@ -56,7 +56,7 @@ function App() {
               callback={responseFacebook}
               icon="fa-facebook"
             />
-          </Card.Text>
+          </React.Fragment>
         </Card.Body>
       </Card>
     </div>
