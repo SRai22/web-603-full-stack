@@ -1,0 +1,34 @@
+{
+  "posts": [
+    {
+      "title": "Lord of The Rings",
+      "author": "J.R.R. Tolkien",
+      "id": "1"
+    },
+    {
+      "title": "The Alchemist",
+      "author": "Paul Coelho",
+      "id": "2"
+    },
+    {
+      "title": "Da Vinci Code",
+      "author": "Dan Brown",
+      "id": "3"
+    },
+    {
+      "title": "A Tale of Two Cities",
+      "author": "Charles Dickens",
+      "id": "4"
+    },
+    {
+      "title": "Compound Effect",
+      "author": "Cal Newport",
+      "id": "446a"
+    },
+    {
+      "title": "Psycology of Money",
+      "author": "Adam Grant",
+      "id": "99eb"
+    }
+  ]
+}
