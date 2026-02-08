@@ -26,7 +26,9 @@ const DisplayProducts = ({ products, onQuantityChange, onShowProduct, onAdd, onS
           key={product.id}
           style={index < products.length - 1 ? productRowStyle : lastProductRowStyle}
         >
-          <h5 style={{ fontSize: '1.5rem', fontWeight: 'normal', margin: '0 0 1rem 0' }}>{product.name}</h5>
+          <h5 style={{ fontSize: '1.5rem', fontWeight: 'normal', margin: '0 0 1rem 0' }}>
+            {product.name} <span style={{ color: '#dc3545', marginLeft: '0.5rem' }}>${product.price}</span>
+          </h5>
           <div className="row align-items-center">
             <div className="col-auto">
               <img
