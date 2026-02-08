@@ -13,7 +13,7 @@ export type State = {
   TodoList5: Todo[];
   TodoList6: Todo[];
   TodoList7: Todo[];
-  sortType: "asc";
+  sortType: "asc" | "desc";
   listNum: string;
 };
 
@@ -53,6 +53,14 @@ class App extends React.Component<{}, State> {
     }));
   };
 
+  onSort = (listNum: Todo[], sortType: "asc" | "desc") => {
+    listNum.sort((a, b) => {
+      const isReversed = sortType === "asc" ? 1 : -1;
+      return isReversed * a.text.localeCompare(b.text);
+    });
+    this.setState({ sortType });
+  };
+
   render() {
     return (
       <div className="App text-secondary">
@@ -61,6 +69,9 @@ class App extends React.Component<{}, State> {
           todoLists={this.state}
           onAddTodo={this.handleAddTodo}
           onToggleTodo={this.handleToggleTodo}
+          sortType={this.state.sortType}
+          listNum={this.state.listNum}
+          onSort={this.onSort}
         />
       </div>
     );

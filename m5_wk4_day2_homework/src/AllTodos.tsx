@@ -1,8 +1,7 @@
-import React from "react";
-
 import Todos from "./Todos";
 
 import type { ListKey, State } from "./App";
+import type { Todo } from "./TodoData";
 
 type DaySection = {
   label: string;
@@ -13,6 +12,9 @@ type AllTodosProps = {
   // Received from Nav route, which received from App
   todoLists: State;
   onToggleTodo: (id: number, listKey: ListKey) => void;
+  sortType: "asc" | "desc";
+  listNum: string;
+  onSort: (listNum: Todo[], sortType: "asc" | "desc") => void;
 };
 
 const sections: DaySection[] = [
@@ -30,17 +32,34 @@ export default function AllTodos(props: AllTodosProps) {
     <div>
       <h2 className="mt-4">Todo Lists</h2>
 
-      {sections.map((s) => (
-        <div key={s.label} className="border mx-5 my-3 py-3">
-          <h3 className="text-info">{s.label}</h3>
+      {sections.map((s) => {
+        const todos = props.todoLists[s.key] as Todo[];
+        return (
+          <div key={s.label} className="border mx-5 my-3 py-3">
+            <h3 className="text-info">{s.label}</h3>
 
-          {/* Restores: click item => show note + Done button, and toggle icon */}
-          <Todos
-            todos={props.todoLists[s.key]}
-            onToggle={(id) => props.onToggleTodo(id, s.key)}
-          />
-        </div>
-      ))}
+            {/* Restores: click item => show note + Done button, and toggle icon */}
+            <Todos
+              todos={todos}
+              onToggle={(id) => props.onToggleTodo(id, s.key)}
+            />
+
+            <button
+              className="mx-1 mt-2 bg-info text-white border-0"
+              onClick={() => props.onSort(todos, "asc")}
+            >
+              Rush
+            </button>
+
+            <button
+              className="mx-1 mt-2 bg-info text-white border-0"
+              onClick={() => props.onSort(todos, "desc")}
+            >
+              Relax
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }

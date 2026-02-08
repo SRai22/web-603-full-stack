@@ -14,6 +14,9 @@ type NavProps = {
   todoLists: State;
   onAddTodo: (item: Omit<Todo, "id">, listKey: ListKey) => void;
   onToggleTodo: (id: number, listKey: ListKey) => void;
+  sortType: "asc" | "desc";
+  listNum: string;
+  onSort: (listNum: Todo[], sortType: "asc" | "desc") => void;
 };
 
 function Nav(props: NavProps) {
@@ -56,6 +59,9 @@ function Nav(props: NavProps) {
             <AllTodos
               todoLists={props.todoLists}
               onToggleTodo={props.onToggleTodo}
+              sortType={props.sortType}
+              listNum={props.listNum}
+              onSort={props.onSort}
             />
           }
         />
