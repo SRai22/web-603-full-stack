@@ -1,114 +1,110 @@
 const mongoose = require('mongoose');
-const Inventory = mongoose.model('Inventory');
+const Book = mongoose.model('Book');
 
-// Create a new inventory
-exports.createInventory = (req, res) => {
-  const inventory = new Inventory({
-    prodname: req.body.prodname,
-    qty: req.body.qty,
-    price: req.body.price,
-    status: req.body.status
+// Create a new book
+exports.createBook = (req, res) => {
+  const book = new Book({
+    title: req.body.title,
+    author: req.body.author
   });
 
-  inventory.save()
+  book.save()
     .then(data => {
       res.status(200).json(data);
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the Inventory."
+        message: err.message || "Some error occurred while creating the Book."
       });
     });
 };
 
-// Retrieve a single inventory by id
-exports.getInventory = (req, res) => {
-  Inventory.findById(req.params.id).select('-__v')
-    .then(inventory => {
-      if (!inventory) {
+// Retrieve a single book by id
+exports.getBook = (req, res) => {
+  Book.findById(req.params.id).select('-__v')
+    .then(book => {
+      if (!book) {
         return res.status(404).send({
-          message: "Inventory not found with id " + req.params.id
+          message: "Book not found with id " + req.params.id
         });
       }
-      res.status(200).json(inventory);
+      res.status(200).json(book);
     })
     .catch(err => {
       if (err.kind === 'ObjectId') {
         return res.status(404).send({
-          message: "Inventory not found with id " + req.params.id
+          message: "Book not found with id " + req.params.id
         });
       }
       return res.status(500).send({
-        message: "Error retrieving inventory with id " + req.params.id
+        message: "Error retrieving book with id " + req.params.id
       });
     });
 };
 
-// Retrieve all inventories
-exports.inventories = async (req, res) => {
-    Inventory.find().select('-__v')
-    .then(inventoryInfos => {
-            res.status(200).json(inventoryInfos);
-        })
-    .catch (err => {
-        console.log(err);
-        res.status(500).send({
-            message: err.message || "Some error occurred while retrieving inventory."
-        });
+// Retrieve all books
+exports.getBooks = async (req, res) => {
+  Book.find().select('-__v')
+    .then(books => {
+      res.status(200).json(books);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving books."
+      });
     });
 };
 
-// Update an inventory
-exports.updateInventory = async (req, res) => {
+// Update a book
+exports.updateBook = async (req, res) => {
   try {
-    const inventory = await Inventory.findByIdAndUpdate(
-      req.body._id,
+    const book = await Book.findByIdAndUpdate(
+      req.params.id,
       {
-        prodname: req.body.prodname,
-        qty: req.body.qty,
-        price: req.body.price,
-        status: req.body.status
+        title: req.body.title,
+        author: req.body.author
       },
-      { new: false }
+      { new: true }
     ).select('-__v');
 
-    if (!inventory) {
+    if (!book) {
       return res.status(404).send({
-        message: "Inventory not found with id " + req.body._id
+        message: "Book not found with id " + req.params.id
       });
     }
-    res.status(200).json(inventory);
+    res.status(200).json(book);
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return res.status(404).send({
-        message: "Inventory not found with id " + req.body._id
+        message: "Book not found with id " + req.params.id
       });
     }
     return res.status(500).send({
-      message: "Error updating inventory with id " + req.body._id
+      message: "Error updating book with id " + req.params.id
     });
   }
 };
 
-// Delete an inventory
-exports.deleteInventory = async (req, res) => {
+// Delete a book
+exports.deleteBook = async (req, res) => {
   try {
-    const inventory = await Inventory.findByIdAndDelete(req.params.id).select('-__v');
+    const book = await Book.findByIdAndDelete(req.params.id).select('-__v');
 
-    if (!inventory) {
+    if (!book) {
       return res.status(404).send({
-        message: "Inventory not found with id " + req.params.id
+        message: "Book not found with id " + req.params.id
       });
     }
-    res.status(200).json({ });
+    res.status(200).json({});
   } catch (err) {
     if (err.kind === 'ObjectId' || err.name === 'NotFound') {
       return res.status(404).send({
-        message: "Inventory not found with id " + req.params.id
+        message: "Book not found with id " + req.params.id
       });
     }
     return res.status(500).send({
-      message: "Could not delete inventory with id " + req.params.id
+      message: "Could not delete book with id " + req.params.id
     });
   }
 };

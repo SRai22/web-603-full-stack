@@ -1,10 +1,8 @@
 const mongoose = require('mongoose');
 
-const InventorySchema = new mongoose.Schema({
-  prodname: String,
-  qty: Number,
-  price: Number,
-  status: String
+const BookSchema = new mongoose.Schema({
+  title: String,
+  author: String
 });
 
-module.exports = mongoose.model('Inventory', InventorySchema);
+module.exports = mongoose.model('Book', BookSchema, 'books');
