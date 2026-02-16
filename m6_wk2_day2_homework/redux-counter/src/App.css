@@ -1,0 +1,32 @@
+.counter {
+  padding: 20px;
+}
+
+.counter h2 {
+  margin: 0 0 10px 0;
+  font-size: 24px;
+}
+
+.counter div {
+  background-color: #00e5ff;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.counter span {
+  display: inline-block;
+  min-width: 30px;
+  padding: 5px 10px;
+  border: 2px solid teal;
+  text-align: center;
+  font-size: 16px;
+  background: white;
+}
+
+.counter button {
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
